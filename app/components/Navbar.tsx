@@ -14,7 +14,9 @@ export async function Navbar() {
         <nav className="border-b bg-background h-[10vh]flex items-center">
             <div className="container flex items-center justify-between">
                 <Link href="/">
-                    <h1 className="font-bold text-3xl py-8">NotesSaas</h1>
+                    <h1 className="font-bold text-3xl py-8">
+                        Notes<span className="text-primary">Saas</span>{' '}
+                    </h1>
                 </Link>
 
                 <div className="flex items-center gap-x-5">
