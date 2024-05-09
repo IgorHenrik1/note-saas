@@ -1,5 +1,5 @@
+import { SubmitButton } from '@/app/components/Submitbuttons';
 import prisma from '@/app/lib/db';
-import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -20,6 +20,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { revalidatePath } from 'next/cache';
 
 async function getData(userId: string) {
     const data = await prisma.user.findUnique({
@@ -40,6 +41,25 @@ export default async function SettingsPage() {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     const data = await getData(user?.id as string);
+
+    async function postData(formData: FormData) {
+        'use server';
+
+        const name = formData.get('name') as string;
+        const colorScheme = formData.get('color') as string;
+        await prisma.user.update({
+            where: {
+                id: user?.id,
+            },
+            data: {
+                name: name ?? undefined,
+
+                colorScheme: colorScheme ?? undefined,
+            },
+        });
+        revalidatePath('/', 'layout');
+    }
+
     return (
         <div className="grid items-start gap-8">
             <div className="flex items-center justify-between px-2">
@@ -52,7 +72,7 @@ export default async function SettingsPage() {
             </div>
 
             <Card>
-                <form>
+                <form action={postData}>
                     <CardHeader>
                         <CardTitle>General Data</CardTitle>
                         <CardDescription>
@@ -123,7 +143,7 @@ export default async function SettingsPage() {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit">Save now</Button>
+                        <SubmitButton />
                     </CardFooter>
                 </form>
             </Card>
