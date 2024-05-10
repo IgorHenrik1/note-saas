@@ -84,5 +84,3 @@ export function UserNav({
         </DropdownMenu>
     );
 }
-
-// 1 hora 03 minutos - https://youtu.be/5dgYg10B9p0?t=3786
